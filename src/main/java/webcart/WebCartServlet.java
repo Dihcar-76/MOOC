@@ -15,25 +15,22 @@ import javax.servlet.http.HttpSession;
 @WebServlet(value="/mycart")
 public class WebCartServlet extends HttpServlet {
 	
-	Cart myCart = null;
+	Cart myCart = new Cart();
 
 
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) 
 	throws ServletException, IOException {
 		// TODO : print a html form using printwriter.
-		PrintWriter out = res.getWriter();
+		//PrintWriter out = res.getWriter();
 		//out.println("<!DOCTYPE html>");
-		res.setContentType("text/html");
-		Cart aCart = (Cart) req.getSession().getAttribute("myCart");
-		if (aCart!= null) {
-
-			aCart.print(out);
-		}
-		else
-		{
+		//res.setContentType("text/html");
+		/*myCart = (Cart) req.getAttribute("myCart");
+		if (myCart == null){
 			myCart = new Cart();
-		}
+		}*/
+		req.setAttribute("myCart", myCart);
+		/*
 		out.println("<html>");
 		out.println("<body>");
 		out.println("<div>");
@@ -63,7 +60,8 @@ public class WebCartServlet extends HttpServlet {
 		out.println("</form>");
 		out.println("</body>");
 		out.println("</html>");
-
+		*/
+		this.getServletContext().getRequestDispatcher("/cart.jsp").forward(req, res);
 	}
 
 	
@@ -82,12 +80,15 @@ public class WebCartServlet extends HttpServlet {
 
 		else{
 			// TODO : print reference and quantity
-			out.println("référence: "+req.getParameter("ref")+" qté: "+req.getParameter("qty"));
+			//out.println("référence: "+req.getParameter("ref")+" qté: "+req.getParameter("qty"));
 			//Cart myCart = new Cart();
+			//myCart = (Cart) req.getAttribute("myCart");
+
+			//out.println(myCart);
 			myCart.addToCart(req.getParameter("ref"), Integer.parseInt(req.getParameter("qty")));
-			req.getSession().setAttribute("myCart", myCart);
-			res.sendRedirect("/myeshop/mycart");
-			//this.getServletContext().getRequestDispatcher("/myeshop/mycart").forward(req, res);
+			req.setAttribute("myCart", myCart);
+			//res.sendRedirect("mycart");
+			this.getServletContext().getRequestDispatcher("/cart.jsp").forward(req, res);
 		}
 	}
 	
